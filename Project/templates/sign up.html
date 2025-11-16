@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .bg {
+            background: url("./static/1.jpg");
+            background-size: cover;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], button {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .form-container {
+                width: 90%;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('sign-up-form');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                if (validateSignUpForm()) {
+                    form.action = 'http://localhost:5000/signup'; // Set the action attribute dynamically
+                    form.submit(); // Submit the form
+                }
+            });
+        });
+
+        function validateSignUpForm() {
+            clearErrors();
+            const username = document.getElementById('sign-up-username').value;
+            const email = document.getElementById('sign-up-email').value;
+            const password = document.getElementById('sign-up-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            let valid = true;
+
+            if (!validateUsername(username)) {
+                showError('sign-up-username-error', 'Username must be at least 3 characters and contain only letters and numbers');
+                valid = false;
+            }
+
+            if (!validateEmail(email)) {
+                showError('sign-up-email-error', 'Invalid email format');
+                valid = false;
+            }
+
+            if (password.length < 6) {
+                showError('sign-up-password-error', 'Password must be at least 6 characters');
+                valid = false;
+            }
+
+            if (password !== confirmPassword) {
+                showError('confirm-password-error', 'Passwords do not match');
+                valid = false;
+            }
+
+            return valid;
+        }
+
+        function validateUsername(username) {
+            const re = /^[a-zA-Z0-9]{3,}$/;
+            return re.test(username);
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.innerText = message;
+        }
+
+        function clearErrors() {
+            const errorElements = document.querySelectorAll('.error');
+            errorElements.forEach(element => element.innerText = '');
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container bg">
+        <form id="sign-up-form" class="form" name="frmsignup" method="POST">
+            <h2>Sign Up / Sign In</h2>
+            <input type="text" id="sign-up-username" name="name" placeholder="Username" required>
+            <div id="sign-up-username-error" class="error"></div>
+            <input type="email" id="sign-up-email" name="email" placeholder="Email" required>
+            <div id="sign-up-email-error" class="error"></div>
+            <input type="password" id="sign-up-password" name="password" placeholder="Password" required>
+            <div id="sign-up-password-error" class="error"></div>
+            <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+            <div id="confirm-password-error" class="error"></div>
+            <button type="submit">Sign Up / In</button>
+        </form>
+    </div>
+</body>
+</html>
